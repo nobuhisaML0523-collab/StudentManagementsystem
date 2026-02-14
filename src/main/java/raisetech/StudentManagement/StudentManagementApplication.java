@@ -1,17 +1,14 @@
 package raisetech.StudentManagement;
 
-import jakarta.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,32 +40,73 @@ public class StudentManagementApplication {
 		return result.toString();
 	}
 
-	@GetMapping("/studentseach")
-	public String getStudents(@RequestParam int id) {
-		Student student = repository.searchByName(id);
+	@GetMapping("/studentsearch")
+	public ResponseEntity<String> getStudents(@RequestParam int id) {
+		Student student = repository.searchById(id);
 
-		return student.getName() + " " + student.getAge() +"歳";
+		if (student == null) {
+			return ResponseEntity
+					.status(HttpStatus.NOT_FOUND)
+					.body("指定されたIDの学生は存在しません");
+		}
+
+		return ResponseEntity.ok(
+				student.getName() + " " + student.getAge() + "歳"
+		);
 	}
 
 	@PostMapping("/student")
-	public void registerStudent(@RequestParam int id, @RequestParam String name, @RequestParam int age) {
+	public ResponseEntity<String> registerStudent(@RequestParam int id, @RequestParam String name, @RequestParam int age) {
 
-		repository.regsiterStudent(id, name,age);
+		repository.registerStudent(id, name,age);
+
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body("登録しました");
 	}
 
 	@PatchMapping("/studentname")
-	public void setStudentName(@RequestParam int id, @RequestParam String name){
+	public ResponseEntity<String> setStudentName(@RequestParam int id, @RequestParam String name){
+		Student student = repository.searchById(id);
+
+		if (student == null) {
+			return ResponseEntity
+					.status(HttpStatus.NOT_FOUND)
+					.body("指定されたIDの学生は存在しません");
+		}
+
 		repository.updateName(id, name);
+
+		return ResponseEntity.ok("名前を更新しました");
 	}
 
 	@PatchMapping("/studentage")
-	public void setStudentName(@RequestParam int id, @RequestParam int age){
+	public ResponseEntity<String> setStudentName(@RequestParam int id, @RequestParam int age){
+		Student student = repository.searchById(id);
+
+		if (student == null) {
+			return ResponseEntity
+					.status(HttpStatus.NOT_FOUND)
+					.body("指定されたIDの学生は存在しません");
+		}
+
 		repository.updateAge(id, age);
+
+		return ResponseEntity.ok("年齢を更新しました");
 	}
 
 	@DeleteMapping("/student")
-	public void deleteStudent(@RequestParam int id){
+	public ResponseEntity<String> deleteStudent(@RequestParam int id){
+
+		Student student = repository.searchById(id);
+
+		if (student == null) {
+			return ResponseEntity.notFound().build();
+		}
+
 		repository.deleteStudent(id);
+
+		return ResponseEntity.noContent().build();
 	}
 
 }
