@@ -5,6 +5,10 @@ public class Student {
   private int age;
   private int id;
 
+  // MyBatis 無引数コンストラクタ
+  public Student() {
+  }
+
   public Student(int id, String name, int age) {
     this.id = id;
     this.name = name;
