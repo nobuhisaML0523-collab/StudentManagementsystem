@@ -25,7 +25,7 @@ public class StudentController {
   }
 
   /**
-   * JSON版：全件取得（REST向け）
+   * HTTPでの表示
    */
   @GetMapping("/list")
   public String getStudentsListJson(Model model) {
@@ -35,11 +35,6 @@ public class StudentController {
     model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
 
     return "studentList";
-  }
-
-  @GetMapping("/courses")
-  public List<StudentsCourses> getStudentsCoursesJson() {
-    return service.searchStudentsCourses();
   }
 
 }
