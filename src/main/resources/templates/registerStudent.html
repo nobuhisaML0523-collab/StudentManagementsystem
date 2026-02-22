@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>受講生登録</title>
+</head>
+<body>
+
+<h1>受講生登録</h1>
+
+<form th:action="@{/registerStudent}" th:object="${studentDetail}" method="post">
+  <h3>受講生情報</h3>
+  <div>
+    <label for="name">名前（フルネーム）</label><br>
+    <input type="text"
+           id="name"
+           th:field="*{student.name}"
+           required />
+  </div>
+
+  <div>
+    <label for="nameKana">ふりがな</label><br>
+    <input type="text"
+           id="nameKana"
+           th:field="*{student.nameKana}"
+           required />
+  </div>
+
+  <div>
+    <label for="nickname">ニックネーム</label><br>
+    <input type="text"
+           id="nickname"
+           th:field="*{student.nickname}" />
+  </div>
+
+  <div>
+    <label for="email">メールアドレス</label><br>
+    <input type="email"
+           id="email"
+           th:field="*{student.email}"
+           required />
+  </div>
+
+  <div>
+    <label for="city">居住地域（市区町村）</label><br>
+    <input type="text"
+           id="city"
+           th:field="*{student.city}" />
+  </div>
+
+  <div>
+    <label for="age">年齢</label><br>
+    <input type="number"
+           id="age"
+           th:field="*{student.age}"
+           min="0" />
+  </div>
+
+  <div>
+    <label>性別</label><br>
+    <label>
+      <input type="radio"
+             th:field="*{student.gender}"
+             value="男性" /> 男性
+    </label>
+    <label>
+      <input type="radio"
+             th:field="*{student.gender}"
+             value="女性" /> 女性
+    </label>
+    <label>
+      <input type="radio"
+             th:field="*{student.gender}"
+             value="その他" /> その他
+    </label>
+  </div>
+
+  <div>
+    <label for="remark">備考</label><br>
+    <textarea id="remark"
+              th:field="*{student.remark}"
+              rows="3"></textarea>
+  </div>
+  <div>
+    <label>受講コース</label>
+    <select th:field="*{courses[0].courseName}" required>
+      <option value="">-- コースを選択してください --</option>
+      <option value="JAVAフルコース">JAVAフルコース</option>
+      <option value="AWSフルコース">AWSフルコース</option>
+      <option value="WordPress副業コース">WordPress副業コース</option>
+      <option value="Webマーケティングコース">Webマーケティングコース</option>
+    </select>
+  </div>
+
+  <div>
+    <button type="submit">登録</button>
+  </div>
+
+</form>
+
+</body>
+</html>
