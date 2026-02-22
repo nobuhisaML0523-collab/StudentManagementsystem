@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
@@ -95,6 +101,20 @@ public class StudentController {
         studentDetail.getStudent(),
         studentDetail.getCourses().get(0)
     );
+  @PostMapping("/registerStudent")
+  public String registerStudent(@ModelAttribute StudentDetail studentDetail) {
+
+    Student student = studentDetail.getStudent();
+
+    // ★ null / 空チェック
+    if (studentDetail.getCourses() == null || studentDetail.getCourses().isEmpty()) {
+      throw new IllegalStateException("コース情報が送信されていません");
+    }
+
+
+    StudentsCourses course = studentDetail.getCourses().get(0);
+
+    service.registerStudent(student, course);
 
     return "redirect:/studentList";
   }
