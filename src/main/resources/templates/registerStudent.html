@@ -9,6 +9,14 @@
 <h1>受講生登録</h1>
 
 <form th:action="@{/registerStudent}" th:object="${studentDetail}" method="post">
+
+  <div th:if="${#fields.hasErrors()}">
+    <ul style="color: red;">
+      <li th:each="err : ${#fields.errors('*')}"
+          th:text="${err}"></li>
+    </ul>
+  </div>
+
   <h3>受講生情報</h3>
   <div>
     <label for="name">名前（フルネーム）</label><br>

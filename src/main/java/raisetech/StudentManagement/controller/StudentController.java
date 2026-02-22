@@ -3,6 +3,7 @@ package raisetech.StudentManagement.controller;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,13 +70,20 @@ public class StudentController {
   }
 
   @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute StudentDetail studentDetail) {
+  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result,
+      Model model) {
 
     Student student = studentDetail.getStudent();
 
     // ★ null / 空チェック
     if (studentDetail.getCourses() == null || studentDetail.getCourses().isEmpty()) {
-      throw new IllegalStateException("コース情報が送信されていません");
+      result.reject("course.empty", "コースを選択してください");
+    }
+
+    // ② 入力エラーがあればフォームに戻す
+    if (result.hasErrors()) {
+      model.addAttribute("studentDetail", studentDetail);
+      return "registerStudent";
     }
 
 
