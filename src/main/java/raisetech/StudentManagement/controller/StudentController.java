@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,26 +71,30 @@ public class StudentController {
   }
 
   @PostMapping("/registerStudent")
-  public String registerStudent(@ModelAttribute StudentDetail studentDetail, BindingResult result,
+  public String registerStudent(
+      @Valid @ModelAttribute StudentDetail studentDetail,
+      BindingResult result,
       Model model) {
 
-    Student student = studentDetail.getStudent();
-
-    // ★ null / 空チェック
-    if (studentDetail.getCourses() == null || studentDetail.getCourses().isEmpty()) {
-      result.reject("course.empty", "コースを選択してください");
-    }
-
-    // ② 入力エラーがあればフォームに戻す
+    // ★ Student の入力エラー
     if (result.hasErrors()) {
-      model.addAttribute("studentDetail", studentDetail);
       return "registerStudent";
     }
 
+    // ★ コース未選択チェック（既存ロジック）
+    if (studentDetail.getCourses() == null
+        || studentDetail.getCourses().isEmpty()
+        || studentDetail.getCourses().get(0).getCourseName() == null
+        || studentDetail.getCourses().get(0).getCourseName().isBlank()) {
 
-    StudentsCourses course = studentDetail.getCourses().get(0);
+      result.reject("course.empty", "コースを選択してください");
+      return "registerStudent";
+    }
 
-    service.registerStudent(student, course);
+    service.registerStudent(
+        studentDetail.getStudent(),
+        studentDetail.getCourses().get(0)
+    );
 
     return "redirect:/studentList";
   }
