@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>受講生編集</title>
+  <style>
+    .readonly {
+      background-color: #f0f0f0;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<h1>受講生編集</h1>
+
+<form th:action="@{/updateStudent}"
+      th:object="${studentDetail}"
+      method="post">
+
+  <!-- IDは必須（hidden） -->
+  <input type="hidden" th:field="*{student.id}" />
+  <input type="hidden" th:field="*{courses[0].id}" />
+
+  <div>
+    <label>名前</label>
+    <input type="text"
+           th:field="*{student.name}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <div>
+    <label>カナ名</label>
+    <input type="text"
+           th:field="*{student.nameKana}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <div>
+    <label>ニックネーム</label>
+    <input type="text"
+           th:field="*{student.nickname}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <div>
+    <label>メールアドレス</label>
+    <input type="email"
+           th:field="*{student.email}" />
+  </div>
+
+  <div>
+    <label>地域</label>
+    <input type="text"
+           th:field="*{student.city}" />
+  </div>
+
+  <div>
+    <label>年齢</label>
+    <input type="number"
+           th:field="*{student.age}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <div>
+    <label>性別</label>
+    <input type="text"
+           th:field="*{student.gender}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <div>
+    <label>備考</label>
+    <textarea th:field="*{student.remark}"
+              rows="3"></textarea>
+  </div>
+
+  <div>
+    <label>コース</label>
+    <input type="text"
+           th:field="*{courses[0].courseName}"
+           class="readonly"
+           disabled />
+  </div>
+
+  <label>
+    <input type="checkbox" name="deleteFlag" value="true">
+    この受講生を非表示
+  </label>
+
+  <button type="submit">更新</button>
+
+</form>
+
+</body>
+</html>

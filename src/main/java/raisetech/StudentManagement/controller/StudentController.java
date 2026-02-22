@@ -1,5 +1,15 @@
 package raisetech.StudentManagement.controller;
 
+import jakarta.validation.Valid;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -49,6 +59,48 @@ public class StudentController {
     return "registerStudent";
   }
 
+  @GetMapping("/editStudent/{id}")
+  public String editStudent(@PathVariable String id, Model model) {
+    model.addAttribute(
+        "studentDetail",
+        service.getStudentDetailForEdit(id)
+    );
+    return "editStudent";
+  }
+
+  @PostMapping("/updateStudent")
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail, @RequestParam(name = "deleteFlag", defaultValue = "false") boolean deleteFlag) {
+
+    service.updateStudent(studentDetail, deleteFlag);
+
+    return "redirect:/studentList";
+  }
+
+  @PostMapping("/registerStudent")
+  public String registerStudent(
+      @Valid @ModelAttribute StudentDetail studentDetail,
+      BindingResult result,
+      Model model) {
+
+    // ★ Student の入力エラー
+    if (result.hasErrors()) {
+      return "registerStudent";
+    }
+
+    // ★ コース未選択チェック（既存ロジック）
+    if (studentDetail.getCourses() == null
+        || studentDetail.getCourses().isEmpty()
+        || studentDetail.getCourses().get(0).getCourseName() == null
+        || studentDetail.getCourses().get(0).getCourseName().isBlank()) {
+
+      result.reject("course.empty", "コースを選択してください");
+      return "registerStudent";
+    }
+
+    service.registerStudent(
+        studentDetail.getStudent(),
+        studentDetail.getCourses().get(0)
+    );
   @PostMapping("/registerStudent")
   public String registerStudent(@ModelAttribute StudentDetail studentDetail) {
 
