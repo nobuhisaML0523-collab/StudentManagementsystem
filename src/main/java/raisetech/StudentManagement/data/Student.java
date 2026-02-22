@@ -1,5 +1,6 @@
 package raisetech.StudentManagement.data;
 
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.validation.constraints.Email;
@@ -25,7 +26,9 @@ public class Student {
   private String city;
 
   @NotNull(message = "年齢は必須です")
-  private int age;
+  @Min(value = 1, message = "年齢は1以上で入力してください")
+  private Integer age;
+
   private String gender;
   private String remark;
   private boolean isDeleted;
