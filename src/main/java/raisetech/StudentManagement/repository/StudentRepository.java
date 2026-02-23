@@ -18,7 +18,7 @@ import raisetech.StudentManagement.data.StudentsCourses;
 public interface StudentRepository {
 
   @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students")
-  List<Student> getALLStudents();
+  List<Student> getAllStudents();
 
   @Select(" SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students WHERE is_deleted = false")
   List<Student> getActiveStudents();

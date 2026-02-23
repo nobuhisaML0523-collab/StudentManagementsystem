@@ -21,7 +21,7 @@ public class StudentService {
   }
 
   public List<Student> searchStudentsList() {
-    return repository.getALLStudents();
+    return repository.getAllStudents();
   }
 
   public List<StudentsCourses> searchStudentsCourses() {
@@ -105,7 +105,7 @@ public class StudentService {
 
   public List<Student> searchStudentsList(boolean includeDeleted) {
     if (includeDeleted) {
-      return repository.getALLStudents();
+      return repository.getAllStudents();
     } else {
       return repository.getActiveStudents();
     }

@@ -34,16 +34,15 @@ public class StudentController {
    */
   @GetMapping("/studentList")
   public String getStudentsList(@RequestParam(name = "includeDeleted", defaultValue = "false") boolean includeDeleted,Model model) {
-    boolean showDeleted = Boolean.TRUE.equals(includeDeleted);
 
-    List<Student> students = service.searchStudentsList(showDeleted);
+    List<Student> students = service.searchStudentsList(includeDeleted);
     List<StudentsCourses> studentsCourses = service.searchStudentsCourses();
 
     model.addAttribute(
         "studentList",
         converter.convertStudentDetails(students, studentsCourses)
     );
-    model.addAttribute("includeDeleted", showDeleted);
+    model.addAttribute("includeDeleted", includeDeleted);
 
     return "studentList";
 
