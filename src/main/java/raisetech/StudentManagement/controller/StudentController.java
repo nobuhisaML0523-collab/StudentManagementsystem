@@ -33,13 +33,19 @@ public class StudentController {
    * HTTPでの表示
    */
   @GetMapping("/studentList")
-  public String getStudentsList(Model model) {
-    List<Student> students = service.searchStudentsList();
+  public String getStudentsList(@RequestParam(name = "includeDeleted", defaultValue = "false") boolean includeDeleted,Model model) {
+
+    List<Student> students = service.searchStudentsList(includeDeleted);
     List<StudentsCourses> studentsCourses = service.searchStudentsCourses();
 
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+    model.addAttribute(
+        "studentList",
+        converter.convertStudentDetails(students, studentsCourses)
+    );
+    model.addAttribute("includeDeleted", includeDeleted);
 
     return "studentList";
+
   }
 
   @GetMapping("/newstudent")
@@ -63,9 +69,9 @@ public class StudentController {
   }
 
   @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute StudentDetail studentDetail, @RequestParam(name = "deleteFlag", defaultValue = "false") boolean deleteFlag) {
+  public String updateStudent(@ModelAttribute StudentDetail studentDetail) {
 
-    service.updateStudent(studentDetail, deleteFlag);
+    service.updateStudent(studentDetail);
 
     return "redirect:/studentList";
   }

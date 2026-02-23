@@ -89,8 +89,9 @@
   </div>
 
   <label>
-    <input type="checkbox" name="deleteFlag" value="true">
-    この受講生を非表示
+    <input type="checkbox"
+           th:field="*{student.deleted}" />
+    削除済みにする
   </label>
 
   <button type="submit">更新</button>
