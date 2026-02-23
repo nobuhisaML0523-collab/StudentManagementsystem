@@ -6,8 +6,6 @@ import lombok.Setter;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -31,12 +29,6 @@ public class Student {
   @Min(value = 1, message = "年齢は1以上で入力してください")
   private Integer age;
 
-  private String name;
-  private String nameKana;
-  private String nickname;
-  private String email;
-  private String city;
-  private int age;
   private String gender;
   private String remark;
   private boolean isDeleted;
