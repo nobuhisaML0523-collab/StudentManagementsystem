@@ -17,8 +17,11 @@ import raisetech.StudentManagement.data.StudentsCourses;
 @Mapper
 public interface StudentRepository {
 
-  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted FROM students WHERE is_deleted = false")
-  List<Student> getStudentsList();
+  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students")
+  List<Student> getALLStudents();
+
+  @Select(" SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted FROM students WHERE is_deleted = false")
+  List<Student> getActiveStudents();
 
   @Select("SELECT id, student_id, course_name, start_date, end_date FROM students_courses")
   List<StudentsCourses> getStudentsCourses();
@@ -29,7 +32,7 @@ public interface StudentRepository {
   @Select("SELECT MAX(id) FROM students_courses")
   String findMaxStudentCourseId();
 
-  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark FROM students WHERE id = #{id} ")
+  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students WHERE id = #{id} ")
   Student findStudentById(String id);
 
   @Select(" SELECT id, student_id, course_name, start_date, end_date FROM students_courses WHERE student_id = #{studentId} ")
@@ -41,10 +44,7 @@ public interface StudentRepository {
   @Insert("INSERT INTO students_courses(id, student_id, course_name, start_date, end_date) VALUES(#{id}, #{studentId}, #{courseName}, #{startDate}, #{endDate})")
   void insertStudentCourse(StudentsCourses course);
 
-  @Update("UPDATE students SET email = #{email}, city = #{city}, remark = #{remark} WHERE id = #{id}")
+  @Update("UPDATE students SET email = #{email}, city = #{city}, remark = #{remark}, is_deleted = #{deleted} WHERE id = #{id}")
   void updateStudent(Student student);
-
-  @Update(" UPDATE students SET is_deleted = true WHERE id = #{id} ")
-  void logicalDeleteStudent(String id);
 
 }

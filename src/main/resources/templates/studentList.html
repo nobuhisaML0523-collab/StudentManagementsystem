@@ -6,6 +6,19 @@
 </head>
 <body>
 <h1>受講生一覧</h1>
+
+<form method="get" th:action="@{/studentList}" style="margin-bottom: 10px;">
+  <label>
+    <input type="checkbox"
+           name="includeDeleted"
+           value="true"
+           th:checked="${includeDeleted}" />
+    削除済みも表示
+  </label>
+
+  <button type="submit">反映</button>
+</form>
+
 <table border = "1">
   <thead>
   <tr>
@@ -19,6 +32,7 @@
     <th>性別</th>
     <th>コース</th>
     <th>備考</th>
+    <th>キャンセル</th>
   </tr>
   </thead>
   <tbody>
@@ -30,7 +44,6 @@
         山本 由伸
       </a>
     </td>
-    <td th:text="${studentDetail.student.name}">山本 由伸</td>
     <td th:text="${studentDetail.student.nameKana}">ヤマモト ヨシノブ</td>
     <td th:text="${studentDetail.student.nickname}">よっしー</td>
     <td th:text="${studentDetail.student.email}">yoshi@example.com</td>
@@ -50,6 +63,10 @@
       </ul>
     </td>
     <td th:text="${studentDetail.student.remark}">特になし</td>
+    <td>
+    <input type="checkbox" th:checked="${studentDetail.student.deleted}"
+           disabled
+           class="readonly-checkbox" />
   </tr>
   </tbody>
 </table>

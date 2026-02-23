@@ -21,7 +21,7 @@ public class StudentService {
   }
 
   public List<Student> searchStudentsList() {
-    return repository.getStudentsList();
+    return repository.getALLStudents();
   }
 
   public List<StudentsCourses> searchStudentsCourses() {
@@ -65,9 +65,15 @@ public class StudentService {
     Student student = repository.findStudentById(studentId);
     List<StudentsCourses> courses = repository.findCoursesByStudentId(studentId);
 
+    // ★ null を絶対に残さない
+    if (student.getDeleted() == null) {
+      student.setDeleted(false);
+    }
+
     StudentDetail detail = new StudentDetail();
     detail.setStudent(student);
     detail.setCourses(courses);
+
     return detail;
   }
 
@@ -83,16 +89,25 @@ public class StudentService {
     return String.format("sc-%03d", num + 1);
   }
 
-  public void updateStudent(StudentDetail studentDetail, boolean deleteChecked) {
+  public void updateStudent(StudentDetail studentDetail) {
 
     Student student = studentDetail.getStudent();
     //StudentsCourses course = studentDetail.getCourses().get(0);
-    if (deleteChecked) {
-      // 論理削除
-      repository.logicalDeleteStudent(student.getId());
+
+    // null 対策（重要）
+    if (student.getDeleted() == null) {
+      student.setDeleted(false);
+    }
+
+    repository.updateStudent(student);
+
+  }
+
+  public List<Student> searchStudentsList(boolean includeDeleted) {
+    if (includeDeleted) {
+      return repository.getALLStudents();
     } else {
-      // 通常更新
-      repository.updateStudent(student);
+      return repository.getActiveStudents();
     }
   }
 
