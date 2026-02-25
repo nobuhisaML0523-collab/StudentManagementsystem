@@ -17,7 +17,7 @@ import raisetech.StudentManagement.data.StudentsCourses;
 @Mapper
 public interface StudentRepository {
 
-  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students")
+  @Select("SELECT id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted FROM students WHERE is_deleted = false")
   List<Student> getStudentsList();
 
   @Select("SELECT id, student_id, course_name, start_date, end_date FROM students_courses")
@@ -29,7 +29,7 @@ public interface StudentRepository {
   @Select("SELECT MAX(id) FROM students_courses")
   String findMaxStudentCourseId();
 
-  @Insert("INSERT INTO students(id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted AS deleted) VALUES(#{id}, #{name}, #{nameKana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, false)")
+  @Insert("INSERT INTO students(id, name, name_kana, nickname, email, city, age, gender, remark, is_deleted) VALUES(#{id}, #{name}, #{nameKana}, #{nickname}, #{email}, #{city}, #{age}, #{gender}, #{remark}, false)")
   void insertStudent(Student student);
 
   @Insert("INSERT INTO students_courses(id, student_id, course_name, start_date, end_date) VALUES(#{id}, #{studentId}, #{courseName}, #{startDate}, #{endDate})")

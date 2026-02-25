@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -17,7 +18,7 @@ import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 import org.springframework.ui.Model;
 
-@RestController
+@Controller
 public class StudentController {
   private final StudentService service;
   private StudentConverter converter;
@@ -33,13 +34,16 @@ public class StudentController {
    * HTTPでの表示
    */
   @GetMapping("/studentList")
-  public List<StudentDetail> getStudentsList() {
+  public String getStudentsList(Model model) {
     List<Student> students = service.searchStudentsList();
     List<StudentsCourses> studentsCourses = service.searchStudentsCourses();
 
-    //model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+    model.addAttribute(
+        "studentList",
+        converter.convertStudentDetails(students, studentsCourses)
+    );
 
-    return converter.convertStudentDetails(students, studentsCourses);
+    return "studentList";
   }
 
   @GetMapping("/newstudent")
@@ -51,14 +55,6 @@ public class StudentController {
 
     model.addAttribute("studentDetail", studentDetail);
     return "registerStudent";
-  }
-
-  @PostMapping("/updateStudent")
-  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
-
-    service.updateStudent(studentDetail);
-
-    return ResponseEntity.ok("更新処理が成功しました");
   }
 
   @PostMapping("/registerStudent")
