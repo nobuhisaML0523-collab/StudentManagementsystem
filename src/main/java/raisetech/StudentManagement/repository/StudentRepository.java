@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import raisetech.StudentManagement.data.Student;
+import raisetech.StudentManagement.data.StudentUpdateRequest;
 import raisetech.StudentManagement.data.StudentsCourses;
 
 /**
@@ -36,6 +37,6 @@ public interface StudentRepository {
   void insertStudentCourse(StudentsCourses course);
 
   @Update("UPDATE students SET email = #{email}, city = #{city}, remark = #{remark} WHERE id = #{id}")
-  void updateStudent(Student student);
+  void updateStudent(StudentUpdateRequest req);
 
 }

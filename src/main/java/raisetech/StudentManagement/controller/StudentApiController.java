@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
+import raisetech.StudentManagement.data.StudentUpdateRequest;
 import raisetech.StudentManagement.data.StudentsCourses;
 import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
@@ -38,13 +39,10 @@ public class StudentApiController {
 
   @PostMapping("/updateStudent")
   public ResponseEntity<?> updateStudent(
-      @RequestBody @Valid StudentDetail studentDetail
+      @RequestBody @Valid StudentUpdateRequest req
   ) {
-    service.updateStudent(studentDetail);
-
-    return ResponseEntity.ok(
-        Map.of("message", "更新処理が成功しました")
-    );
+    service.updateStudent(req);
+    return ResponseEntity.ok(Map.of("message", "更新処理が成功しました"));
   }
 
 }

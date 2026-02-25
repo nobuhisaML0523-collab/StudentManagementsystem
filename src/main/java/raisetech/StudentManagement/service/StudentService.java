@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raisetech.StudentManagement.data.Student;
+import raisetech.StudentManagement.data.StudentUpdateRequest;
 import raisetech.StudentManagement.data.StudentsCourses;
-import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.repository.StudentRepository;
 
 @Service
@@ -73,11 +73,9 @@ public class StudentService {
     return String.format("sc-%03d", num + 1);
   }
 
-  public void updateStudent(StudentDetail studentDetail) {
+  public void updateStudent(StudentUpdateRequest req) {
 
-    Student student = studentDetail.getStudent();
-
-      repository.updateStudent(student);
+      repository.updateStudent(req);
   }
 
 }
