@@ -7,9 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
@@ -37,7 +35,10 @@ public class StudentController {
     List<Student> students = service.searchStudentsList();
     List<StudentsCourses> studentsCourses = service.searchStudentsCourses();
 
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+    model.addAttribute(
+        "studentList",
+        converter.convertStudentDetails(students, studentsCourses)
+    );
 
     return "studentList";
   }
@@ -53,28 +54,10 @@ public class StudentController {
     return "registerStudent";
   }
 
-  @GetMapping("/editStudent/{id}")
-  public String editStudent(@PathVariable String id, Model model) {
-    model.addAttribute(
-        "studentDetail",
-        service.getStudentDetailForEdit(id)
-    );
-    return "editStudent";
-  }
-
-  @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute StudentDetail studentDetail, @RequestParam(name = "deleteFlag", defaultValue = "false") boolean deleteFlag) {
-
-    service.updateStudent(studentDetail, deleteFlag);
-
-    return "redirect:/studentList";
-  }
-
   @PostMapping("/registerStudent")
   public String registerStudent(
       @Valid @ModelAttribute StudentDetail studentDetail,
-      BindingResult result,
-      Model model) {
+      BindingResult result) {
 
     // ★ Student の入力エラー
     if (result.hasErrors()) {
