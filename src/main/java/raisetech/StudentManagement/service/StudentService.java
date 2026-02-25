@@ -61,16 +61,6 @@ public class StudentService {
     repository.insertStudentCourse(course);
   }
 
-  public StudentDetail getStudentDetailForEdit(String studentId) {
-    Student student = repository.findStudentById(studentId);
-    List<StudentsCourses> courses = repository.findCoursesByStudentId(studentId);
-
-    StudentDetail detail = new StudentDetail();
-    detail.setStudent(student);
-    detail.setCourses(courses);
-    return detail;
-  }
-
   private String generateNextStudentId(String maxId) {
     if (maxId == null) return "stu-001";
     int num = Integer.parseInt(maxId.substring(4));
@@ -83,17 +73,11 @@ public class StudentService {
     return String.format("sc-%03d", num + 1);
   }
 
-  public void updateStudent(StudentDetail studentDetail, boolean deleteChecked) {
+  public void updateStudent(StudentDetail studentDetail) {
 
     Student student = studentDetail.getStudent();
-    //StudentsCourses course = studentDetail.getCourses().get(0);
-    if (deleteChecked) {
-      // 論理削除
-      repository.logicalDeleteStudent(student.getId());
-    } else {
-      // 通常更新
+
       repository.updateStudent(student);
-    }
   }
 
 }

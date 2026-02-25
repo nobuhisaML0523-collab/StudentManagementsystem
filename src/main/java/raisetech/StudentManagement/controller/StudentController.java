@@ -3,13 +3,13 @@ package raisetech.StudentManagement.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 import raisetech.StudentManagement.controller.converter.StudentConverter;
 import raisetech.StudentManagement.data.Student;
 import raisetech.StudentManagement.data.StudentsCourses;
@@ -17,7 +17,7 @@ import raisetech.StudentManagement.domain.StudentDetail;
 import raisetech.StudentManagement.service.StudentService;
 import org.springframework.ui.Model;
 
-@Controller
+@RestController
 public class StudentController {
   private final StudentService service;
   private StudentConverter converter;
@@ -33,13 +33,13 @@ public class StudentController {
    * HTTPでの表示
    */
   @GetMapping("/studentList")
-  public String getStudentsList(Model model) {
+  public List<StudentDetail> getStudentsList() {
     List<Student> students = service.searchStudentsList();
     List<StudentsCourses> studentsCourses = service.searchStudentsCourses();
 
-    model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
+    //model.addAttribute("studentList", converter.convertStudentDetails(students, studentsCourses));
 
-    return "studentList";
+    return converter.convertStudentDetails(students, studentsCourses);
   }
 
   @GetMapping("/newstudent")
@@ -53,28 +53,18 @@ public class StudentController {
     return "registerStudent";
   }
 
-  @GetMapping("/editStudent/{id}")
-  public String editStudent(@PathVariable String id, Model model) {
-    model.addAttribute(
-        "studentDetail",
-        service.getStudentDetailForEdit(id)
-    );
-    return "editStudent";
-  }
-
   @PostMapping("/updateStudent")
-  public String updateStudent(@ModelAttribute StudentDetail studentDetail, @RequestParam(name = "deleteFlag", defaultValue = "false") boolean deleteFlag) {
+  public ResponseEntity<String> updateStudent(@RequestBody StudentDetail studentDetail) {
 
-    service.updateStudent(studentDetail, deleteFlag);
+    service.updateStudent(studentDetail);
 
-    return "redirect:/studentList";
+    return ResponseEntity.ok("更新処理が成功しました");
   }
 
   @PostMapping("/registerStudent")
   public String registerStudent(
       @Valid @ModelAttribute StudentDetail studentDetail,
-      BindingResult result,
-      Model model) {
+      BindingResult result) {
 
     // ★ Student の入力エラー
     if (result.hasErrors()) {
